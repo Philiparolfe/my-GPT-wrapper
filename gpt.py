@@ -9,15 +9,29 @@ client = OpenAI(
   api_key=os.environ.get("AIAPIKEY"),
 )
 
-response = client.chat.completions.create(
-  model="gpt-3.5-turbo",
-  messages=[
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "Who won the world series in 2020?"},
-    {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-    {"role": "user", "content": "Where was it played?"}
-  ]
-)
+class GPT:
+    def __init__(self) -> None:
+        self.client = OpenAI(api_key=os.environ.get("AIAPIKEY"))
+    def chat_completion(self, user_content):
+        response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": f"{user_content}"}
+        ]
+        )
+        return f"{response.choices[0].message.content}"
+    
+    def custom_GPT(self, sys_prompt, user_content):
+        response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": f"{sys_prompt}"},
+            {"role": "user", "content": f"{user_content}"}
+        ]
+        )
+        return f"{response.choices[0].message.content}"
 
-content = response.choices[0].message.content
-print(content)
+# Test    
+GPT_instance = GPT()
+print(GPT_instance.chat_completion(user_content="hello"))
